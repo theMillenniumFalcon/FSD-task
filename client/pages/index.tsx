@@ -21,7 +21,7 @@ const ProfileImage = chakra(Image, {
 const Home = () => (
   <Layout title="">
     <Container>
-      <Box display={{ md: 'flex' }}>
+      {/* <Box display={{ md: 'flex' }}>
         <Box flexGrow={1}>
           <Heading as="h2" variant="page-title">
             Nishank Priydarshi
@@ -101,7 +101,8 @@ const Home = () => (
           and traveling. If you happen to be in the same city I live
           (currently in New Delhi), maybe we can hang out together.
         </Paragraph>
-      </Section>
+      </Section> */}
+      Hello
     </Container>
   </Layout>
 )

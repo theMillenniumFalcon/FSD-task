@@ -1,21 +1,8 @@
 import Logo from './logo'
 import NextLink from 'next/link'
-import {
-  Container,
-  Box,
-  Link,
-  Stack,
-  Heading,
-  Flex,
-  Menu,
-  MenuItem,
-  MenuList,
-  MenuButton,
-  IconButton,
-  useColorModeValue,
-  Button
-} from '@chakra-ui/react'
+import { Container, Box, Link, Stack, Heading, Flex, Menu, MenuItem, MenuList, MenuButton, IconButton, useColorModeValue, Button } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
+import { useRouter } from 'next/router'
 import ThemeToggleButton from './theme-toggle-button'
 
 const LinkItem = ({ href, path, target, children, ...props }: any) => {
@@ -37,6 +24,8 @@ const LinkItem = ({ href, path, target, children, ...props }: any) => {
 }
 
 const Navbar = (props: any) => {
+  const router = useRouter()
+  const util = ((router.asPath.split('/')[1]) as unknown) as string
   const { path } = props
 
   return (
@@ -80,7 +69,13 @@ const Navbar = (props: any) => {
         </Stack>
 
         <Box flex={1} textAlign="right">
-          <Button mr={3}>Sign Up</Button>
+          <Button mr={3}>
+            {util === "signup" ? (
+              <NextLink href="/login" passHref>Login</NextLink>
+            ) : (
+              <NextLink href="/signup" passHref>Sign Up</NextLink>
+            )}
+          </Button>
           <ThemeToggleButton />
 
           <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>

@@ -1,20 +1,24 @@
 import 'dotenv-safe/config'
 import express from 'express'
+import bodyParser from 'body-parser'
 import { connectDB } from './db/db'
+import { errorHandler } from './middleware/error'
 
 const PORT = parseInt(process.env.PORT)
 
 const main = async () => {
-    // connectDB()
+    connectDB()
     const app = express()
 
-    app.use(express.json())
+    app.use(bodyParser.json())
 
     app.get('/', (_, res) => {
         res.send("Server is working fine!")
     })
 
     app.use('/api/auth', require('./routes/auth'))
+
+    app.use(errorHandler)
 
     const server = app.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}`)

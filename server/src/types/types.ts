@@ -4,4 +4,5 @@ export type Context = {
     req: Request
     res: Response
     next: NextFunction
+    err: any
 }
