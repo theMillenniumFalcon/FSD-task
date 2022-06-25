@@ -1,39 +1,24 @@
 const mongoose = require('mongoose');
 
-const itemSchema = new mongoose.Schema({
+const RecipeSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		required: [true, 'An item must have a name'],
-		unique: true,
+		required: [true, 'A recipe must have a name'],
 		trim: true
 	},
-	category: {
-		type: String,
-		required: [true, 'An item must belong to a category']
+	ingredients: {
+		type: [String],
+		required: [true, 'A recipe must have atleast one ingredient']
 	},
-	price: {
-		type: Number,
-		required: [true, 'An item must have a price']
+	procedure: {
+		type: [String],
+		required: [true, 'A recipe must have a procedure']
 	},
 	photoUrl: {
 		type: String,
 		default: ''
-	},
-	ratingsQuantity: {
-		type: Number,
-		default: 0
-	},
-	priceDiscount: {
-		type: Number,
-		validate: {
-			validator: function (val) {
-				// this only points to the new document on NEW document creation
-				return val < this.price;
-			},
-			message: 'Discount price ({VALUE}) should be below reglar price'
-		},
-		default: 0
 	}
 });
 
-module.exports = mongoose.model('Item', itemSchema);
+const Recipe = mongoose.model("Recipe", RecipeSchema)
+module.exports = Recipe
