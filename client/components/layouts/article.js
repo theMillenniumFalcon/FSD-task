@@ -8,7 +8,7 @@ const variants = {
   exit: { opacity: 0, x: -0, y: 20 }
 }
 
-const Layout = ({ children, title }: any) => {
+const Layout = ({ children, title }) => {
   const t = `${title} - Food Recipe App`
   return (
     <motion.article

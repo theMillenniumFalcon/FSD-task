@@ -5,13 +5,17 @@ import {
   Heading,
   Box,
   Button,
-  chakra,
-  Flex
+  List,
+  ListItem,
+  useColorModeValue,
+  chakra
 } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import Paragraph from '../components/paragraph'
+import { BioSection, BioYear } from '../components/bio'
 import Layout from '../components/layouts/article'
 import Section from '../components/section'
+import { IoLogoTwitter, IoLogoInstagram, IoLogoGithub, IoLogoLinkedin } from 'react-icons/io5'
 import Image from 'next/image'
 
 const ProfileImage = chakra(Image, {
@@ -19,9 +23,20 @@ const ProfileImage = chakra(Image, {
 })
 
 const Home = () => (
-  <Layout title="">
+  <Layout>
     <Container>
-      {/* <Box display={{ md: 'flex' }}>
+      <Box
+        borderRadius="lg"
+        mb={6}
+        p={3}
+        textAlign="center"
+        bg={useColorModeValue('whiteAlpha.500', 'whiteAlpha.200')}
+        css={{ backdropFilter: 'blur(10px)' }}
+      >
+        Hello, I&apos;m a full-stack web developer based in India!
+      </Box>
+
+      <Box display={{ md: 'flex' }}>
         <Box flexGrow={1}>
           <Heading as="h2" variant="page-title">
             Nishank Priydarshi
@@ -80,16 +95,27 @@ const Home = () => (
             </Link>
           </NextLink>
         </Paragraph>
-        <Flex align="center" my={4}>
+        <Box align="center" my={4}>
           <NextLink href="/works" passHref scroll={false}>
             <Button rightIcon={<ChevronRightIcon />} colorScheme="teal">
               My resume
             </Button>
           </NextLink>
-        </Flex>
+        </Box>
       </Section>
 
       <Section delay={0.3}>
+        <Heading as="h3" variant="section-title">
+          Achievements
+        </Heading>
+        <BioSection>
+          <BioYear>Jan 2021</BioYear>
+          SUSE Cloud Native Scholarship Recepient
+        </BioSection>
+        <BioSection>
+          <BioYear>2021 - Present</BioYear>
+          Solved 300+ problems on Leetcode
+        </BioSection>
       </Section>
 
       <Section delay={0.3}>
@@ -101,8 +127,59 @@ const Home = () => (
           and traveling. If you happen to be in the same city I live
           (currently in New Delhi), maybe we can hang out together.
         </Paragraph>
-      </Section> */}
-      Hello
+      </Section>
+
+      <Section delay={0.3}>
+        <Heading as="h3" variant="section-title">
+          On the web
+        </Heading>
+        <List>
+          <ListItem>
+            <Link href="https://github.com/theMillenniumFalcon" target="_blank">
+              <Button
+                variant="ghost"
+                colorScheme="teal"
+                leftIcon={<IoLogoGithub />}
+              >
+                @theMillenniumFalcon
+              </Button>
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link href="https://twitter.com/nishankstwt" target="_blank">
+              <Button
+                variant="ghost"
+                colorScheme="teal"
+                leftIcon={<IoLogoTwitter />}
+              >
+                @nishankstwt
+              </Button>
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link href="https://www.linkedin.com/in/nishank-priydarshi-2526551ba/" target="_blank">
+              <Button
+                variant="ghost"
+                colorScheme="teal"
+                leftIcon={<IoLogoLinkedin />}
+              >
+                @nshvnk
+              </Button>
+            </Link>
+          </ListItem>
+          <ListItem>
+            <Link href="https://instagram.com/nshvnk" target="_blank">
+              <Button
+                variant="ghost"
+                colorScheme="teal"
+                leftIcon={<IoLogoInstagram />}
+              >
+                @nshvnk
+              </Button>
+            </Link>
+          </ListItem>
+        </List>
+      </Section>
     </Container>
   </Layout>
 )

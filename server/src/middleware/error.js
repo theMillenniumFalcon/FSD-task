@@ -1,7 +1,6 @@
-import { Context } from 'src/types/types'
-import { ErrorResponse } from '../utils/errorResponse'
+const ErrorResponse = require('../utils/errorResponse')
 
-export const errorHandler = ({err, res}: Context) => {
+const errorHandler = (err, req, res, next) => {
     let error = { ...err }
     error.message = err.message
 
@@ -11,7 +10,7 @@ export const errorHandler = ({err, res}: Context) => {
     }
 
     if(err.name === "ValidationError") {
-        const message = Object.values(err.errors).map(({val}: any) => val.message)
+        const message = Object.values(err.errors).map((val) => val.message)
         error = new ErrorResponse(message, 400)
     }
 
@@ -20,3 +19,5 @@ export const errorHandler = ({err, res}: Context) => {
         error: error.message || "Server Error"
     })
 }
+
+module.exports = errorHandler

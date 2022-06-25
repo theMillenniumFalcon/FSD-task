@@ -2,7 +2,7 @@ import { Box, UnorderedList, ListItem, Text } from "@chakra-ui/react";
 import Image from 'next/image'
 import { Global } from '@emotion/react'
 
-export const IngredientsItem = ({ title, item }: any) => (
+export const IngredientsItem = ({ title, item }) => (
     <Box w="100%">
         <Text fontSize={18}>{title}</Text>
         <UnorderedList>
@@ -13,7 +13,7 @@ export const IngredientsItem = ({ title, item }: any) => (
     </Box>
 )
 
-export const ProcedureItem = ({ title, thumbnail, item }: any) => (
+export const ProcedureItem = ({ title, thumbnail, item }) => (
     <Box w="100%">
         <Text fontSize={18}>{title}</Text>
         <UnorderedList mb={2}>

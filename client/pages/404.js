@@ -1,11 +1,11 @@
 import NextLink from 'next/link'
 import {
+  Box,
   Heading,
   Text,
   Container,
   Divider,
-  Button,
-  Flex
+  Button
 } from '@chakra-ui/react'
 
 const NotFound = () => {
@@ -14,11 +14,11 @@ const NotFound = () => {
       <Heading as="h1">Not found</Heading>
       <Text>The page you&apos;re looking for was not found.</Text>
       <Divider my={6} />
-      <Flex my={6} align="center">
+      <Box my={6} align="center">
         <NextLink href="/" passHref>
           <Button colorScheme="teal">Return to home</Button>
         </NextLink>
-      </Flex>
+      </Box>
     </Container>
   )
 }

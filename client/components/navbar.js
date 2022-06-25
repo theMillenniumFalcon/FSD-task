@@ -1,11 +1,25 @@
 import Logo from './logo'
 import NextLink from 'next/link'
-import { Container, Box, Link, Stack, Heading, Flex, Menu, MenuItem, MenuList, MenuButton, IconButton, useColorModeValue, Button } from '@chakra-ui/react'
-import { HamburgerIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
+import {
+  Container,
+  Box,
+  Link,
+  Stack,
+  Heading,
+  Flex,
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuButton,
+  IconButton,
+  useColorModeValue,
+  Button
+} from '@chakra-ui/react'
+import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
 
-const LinkItem = ({ href, path, target, children, ...props }: any) => {
+const LinkItem = ({ href, path, target, children, ...props }) => {
   const active = path === href
   const inactiveColor = useColorModeValue('gray200', 'whiteAlpha.900')
   return (
@@ -23,9 +37,9 @@ const LinkItem = ({ href, path, target, children, ...props }: any) => {
   )
 }
 
-const Navbar = (props: any) => {
+const Navbar = props => {
   const router = useRouter()
-  const util = ((router.asPath.split('/')[1]) as unknown) as string
+  const util = (router.asPath.split('/')[1])
   const { path } = props
 
   return (
@@ -68,8 +82,8 @@ const Navbar = (props: any) => {
           </LinkItem>
         </Stack>
 
-        <Box flex={1} textAlign="right">
-          <Button mr={3}>
+        <Box flex={1} align="right">
+        <Button mr={3}>
             {util === "signup" ? (
               <NextLink href="/login" passHref>Login</NextLink>
             ) : (
