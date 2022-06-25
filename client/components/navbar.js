@@ -42,6 +42,13 @@ const Navbar = props => {
   const util = (router.asPath.split('/')[1])
   const { path } = props
 
+  const logoutHandler = () => {
+    localStorage.removeItem("authToken")
+    router.push('/')
+  }
+
+  let condition = typeof window !== 'undefined' && localStorage.getItem("authToken")
+
   return (
     <Box
       position="fixed"
@@ -77,19 +84,26 @@ const Navbar = props => {
           <LinkItem href="/" path={path}>
             Home
           </LinkItem>
-          <LinkItem href="/recipes" path={path}>
-            Recipes
-          </LinkItem>
+          {condition ? (
+            <LinkItem href="/recipes" path={path}>
+              Recipes
+            </LinkItem>
+          ) : null}
         </Stack>
 
         <Box flex={1} align="right">
-        <Button mr={3}>
-            {util === "signup" ? (
-              <NextLink href="/login" passHref>Login</NextLink>
-            ) : (
-              <NextLink href="/signup" passHref>Sign Up</NextLink>
-            )}
-          </Button>
+          {!condition ? (
+            <Button mr={3}>
+              {util === "signup" ? (
+                <NextLink href="/login" passHref>Login</NextLink>
+              ) : (
+                <NextLink href="/signup" passHref>Sign Up</NextLink>
+              )}
+            </Button>
+          ) : null}
+          {condition ? (
+            <Button mr={3} onClick={logoutHandler}>Logout</Button>
+          ) : null}
           <ThemeToggleButton />
 
           <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
@@ -104,9 +118,14 @@ const Navbar = props => {
                 <NextLink href="/" passHref>
                   <MenuItem as={Link}>Home</MenuItem>
                 </NextLink>
-                <NextLink href="/recipes" passHref>
-                  <MenuItem as={Link}>Recipes</MenuItem>
-                </NextLink>
+                {condition ? (
+                  <Box>
+                    <NextLink href="/recipes" passHref>
+                      <MenuItem as={Link}>Recipes</MenuItem>
+                    </NextLink>
+                    <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+                  </Box>
+                ) : null}
               </MenuList>
             </Menu>
           </Box>
