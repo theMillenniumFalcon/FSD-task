@@ -7,13 +7,6 @@
 - [MongoDB](https://www.mongodb.com/) - A document-oriented database program.
 - [Chakra UI](https://chakra-ui.com/) - A simple, modular and accessible component library for React.
 - [Framer Motion](https://www.framer.com/motion/) - An animation library for React.
-### Start the database
-
-Make sure Docker is installed, and that the Docker daemon is running. Then, run the following command to start an ephemeral database in the background:
-
-```
-docker run -dp 6379:6379 --name playground-db redis:latest
-```
 
 ## Config / Secrets environment variables
 
@@ -60,29 +53,28 @@ npm run dev
 
 ## Project Structure
 
-### server
-    .
-    ├── dist                    # Compiled javascript files
-    ├── src                     # Source files
-    └── ...
-
 ### client
     .
-    ├── generated               # Typescript hooks generated using graphQL
-    ├── graphql                 # GraphQL files
+    ├── components              # React components
+    ├── lib                     # utils
     ├── pages                   # nextJS pages
     ├── public                  # assets
     └── ...
 
-### server src Structure
+### server
 
     .
     ├── ...
-    ├── src
+    ├── src                     # Source files
     │   ├── ...
-    │   ├── entities            # Entities for database tables
-    │   ├── migrations          # TypeORM migrations
-    |   ├── index.ts            # Starting point
+    │   ├── controllers         # Controllers for database schemas
+    │   ├── db                  # Database connection file
+    │   ├── middleware          # Middleware functions
+    │   ├── models              # MongoDB models
+    │   ├── routers             # routers
+    │   ├── uploads             # static files
+    │   ├── utils               # Utils
+    |   ├── index.js            # Starting point
     │   └── ...
     └── ...
 
