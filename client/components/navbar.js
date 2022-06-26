@@ -14,10 +14,13 @@ import {
   MenuButton,
   IconButton,
   useColorModeValue,
-  Button
+  Button,
+  Text
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
   const active = path === href
@@ -39,15 +42,35 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
 
 const Navbar = props => {
   const router = useRouter()
+  const [user, setUser] = useState("")
   const util = (router.asPath.split('/')[1])
   const { path } = props
 
+  let condition = typeof window !== 'undefined' && localStorage.getItem("authToken")
+
+  useEffect(() => {
+    const getData = async () => {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      }
+
+      try {
+        const user = await axios.get('http://localhost:4000', config)
+        setUser(user.data)
+      } catch (error) {
+        localStorage.removeItem("authToken")
+      }
+
+    }
+    getData()
+  }, [])
+
   const logoutHandler = () => {
     localStorage.removeItem("authToken")
-    router.push('/')
+    router.replace('/')
   }
-
-  let condition = typeof window !== 'undefined' && localStorage.getItem("authToken")
 
   return (
     <Box
@@ -93,7 +116,7 @@ const Navbar = props => {
 
         <Box flex={1} align="right">
           {!condition ? (
-            <Button mr={3}>
+            <Button mr={2}>
               {util === "signup" ? (
                 <NextLink href="/login" passHref>Login</NextLink>
               ) : (
@@ -102,7 +125,10 @@ const Navbar = props => {
             </Button>
           ) : null}
           {condition ? (
-            <Button mr={3} onClick={logoutHandler}>Logout</Button>
+            <>
+              <Button mr={2} onClick={logoutHandler}>Logout</Button>
+              {/* <Text mr={2}>{user.username}</Text> */}
+            </>
           ) : null}
           <ThemeToggleButton />
 

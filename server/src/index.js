@@ -4,6 +4,7 @@ const connectDB = require('./db/db')
 const authRoute = require('./routers/auth')
 const recipeRoute = require('./routers/recipe')
 const errorHandler = require('./middleware/error')
+const { checkUser } = require('./middleware/checkUser')
 const cors = require("cors")
 const corsOptions = {
     origin:'*', 
@@ -19,9 +20,9 @@ const main = async () => {
     app.use(express.json())
     app.use(cors(corsOptions))
 
-    app.get('/', (_, res) => {
-        res.send("Server is working fine!")
-    })
+    app.get('/', checkUser)
+
+    app.use('/uploads', express.static('src/uploads'))
     
     app.use('/auth', authRoute)
     app.use('/recipes', recipeRoute)

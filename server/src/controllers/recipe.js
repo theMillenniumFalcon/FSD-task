@@ -3,7 +3,8 @@ const Recipe = require('../models/Recipe')
 const getAllRecipes = async (req, res, next) => {
     try {
         const recipes = await Recipe.find()
-        res.status(200).json({ success: true, recipes })
+        res.send(recipes)
+        next()
     } catch (error) {
         res.status(500).json({ success: false, error: error.message })
     }
@@ -12,7 +13,7 @@ const getAllRecipes = async (req, res, next) => {
 const getRecipe = async (req, res, next) => {
     try {
         const recipe = await Recipe.findById(req.params.id)
-        res.status(200).json({ success: true, recipe })
+        res.send(recipe)
     } catch (error) {
         res.status(500).json({ success: false, error: error.message })
     }
@@ -20,6 +21,14 @@ const getRecipe = async (req, res, next) => {
 
 const addRecipe = async (req, res, next) => {
     const newRecipe = new Recipe(req.body)
+    if (req.files) {
+        let path = ''
+        req.files.forEach(function(files, index, arr) {
+            path = path + files.path + ','
+        })
+        path = path.substring(0, path.lastIndexOf(","))
+        newRecipe.photo = path
+    }
 
     try {
         const savedRecipe = await newRecipe.save()

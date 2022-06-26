@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const RecipeSchema = new mongoose.Schema({
 	name: {
@@ -14,7 +14,7 @@ const RecipeSchema = new mongoose.Schema({
 		type: [String],
 		required: [true, 'A recipe must have a procedure']
 	},
-	photoUrl: {
+	photo: {
 		type: String,
 		default: ''
 	}

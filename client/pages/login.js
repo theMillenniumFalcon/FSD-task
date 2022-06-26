@@ -15,6 +15,7 @@ const Login = () => {
     useEffect(() => {
       if (localStorage.getItem("authToken")) {
         router.push('/')
+        router.reload()
       }
     }, [router])
     
