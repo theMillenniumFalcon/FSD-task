@@ -22,7 +22,7 @@ const main = async () => {
 
     app.get('/', checkUser)
 
-    app.use('/uploads', express.static('src/uploads'))
+    app.use("/uploads", express.static("src/uploads"))
     
     app.use('/auth', authRoute)
     app.use('/recipes', recipeRoute)

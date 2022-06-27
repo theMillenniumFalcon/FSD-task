@@ -17,6 +17,10 @@ const RecipeSchema = new mongoose.Schema({
 	photo: {
 		type: String,
 		default: ''
+	},
+	creatorId: {
+		type: String,
+		default: ''
 	}
 });
 

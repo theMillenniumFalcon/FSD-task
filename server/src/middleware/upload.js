@@ -1,4 +1,3 @@
-const path = require('path')
 const multer = require("multer")
 
 const storage = multer.diskStorage({
@@ -6,7 +5,8 @@ const storage = multer.diskStorage({
         cb(null, "src/uploads")
     },
     filename: (req, file, cb) => {
-        cb(null, `${file.originalname}`.replace(/ /g, "_"))
+        let path = `${file.originalname}`.replace(/ /g, "_")
+        cb(null, Date.now() + path)
     },
 })
 

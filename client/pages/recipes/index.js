@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, Heading, SimpleGrid } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Heading, SimpleGrid, Text } from '@chakra-ui/react'
 import Layout from '../../components/layouts/article'
 import Section from '../../components/section'
 import { GridItem } from '../../components/grid-item'
@@ -8,11 +8,12 @@ import { useState, useEffect } from 'react'
 import NextLink from 'next/link'
 import axios from 'axios'
 
-import thumbGettingStartedWithFreelancing from '../../public/images/blogs/getting-started-with-freelancing.png'
+import index from '../../public/images/index.jpg'
 
 const Recipes = () => {
   const router = useRouter()
   const [recipes, setRecipes] = useState([])
+  const [thumbnail, setThumbnail] = useState({})
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
@@ -27,9 +28,30 @@ const Recipes = () => {
 
       try {
         const recipes = await axios.get('http://localhost:4000/recipes', config)
+        // {
+        //   recipes.data.map((item) => {
+        //     const photoURL = item.photo.split(',')[0].substring(12)
+        //     const thumbnail = axios.get(`http://localhost:4000/uploads/${photoURL}`, config)
+        //     // setThumbnail(thumbnail.data)
+        //     console.log(thumbnail)
+        //   })
+        // }
+        const dispatch = () => {
+          const photoData = Promise.resolve(recipes.data.map((item) => {
+            const photoURL = item.photo.split(',')[0].substring(12)
+            return axios.get(`http://localhost:4000/uploads/${photoURL}`, config)
+          }))
+          photoData.then((thumbnail) => {
+            console.log(thumbnail)
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
+        dispatch()
         setRecipes(recipes.data)
       } catch (error) {
         router.push('/')
+        console.log(error)
       }
     }
     getData()
@@ -54,9 +76,10 @@ const Recipes = () => {
               <Box key={item._id}>
                 <GridItem
                   title={item.name}
-                  thumbnail={thumbGettingStartedWithFreelancing}
+                  thumbnail={index}
                   id={item._id}
                 />
+                <Text>{item.photo.split(',')[0].substring(12)}</Text>
               </Box>
             ))}
           </SimpleGrid>
