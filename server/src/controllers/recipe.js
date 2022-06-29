@@ -1,4 +1,6 @@
 const Recipe = require('../models/Recipe')
+const _ = require('lodash')
+const { baseURL } = require('../config/config')
 
 const getAllRecipes = async (req, res, next) => {
     try {
@@ -21,14 +23,14 @@ const getRecipe = async (req, res, next) => {
 
 const addRecipe = async (req, res, next) => {
     const newRecipe = new Recipe(req.body)
-    if (req.files) {
-        let path = ''
-        req.files.forEach(function(files, index, arr) {
-            path = path + files.path + ','
-        })
-        path = path.substring(0, path.lastIndexOf(","))
-        newRecipe.photo = path
-    }
+    let { files } = req
+    let resp = []
+    _.forEach(files, (file) => {
+        let imagePath = file.path.replace("public", baseURL).replace()
+        imagePath = imagePath.split('src')[1].substring(1, imagePath.length)
+        resp.push(imagePath)
+        newRecipe.photos = resp
+    })
 
     try {
         const savedRecipe = await newRecipe.save()

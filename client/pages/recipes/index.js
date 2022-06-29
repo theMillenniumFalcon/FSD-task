@@ -1,19 +1,18 @@
-import { Box, Button, Container, Flex, Heading, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Heading, SimpleGrid, Text, Link, InputGroup, InputLeftElement, Input } from '@chakra-ui/react'
 import Layout from '../../components/layouts/article'
 import Section from '../../components/section'
-import { GridItem } from '../../components/grid-item'
-import Searchbar from '../../components/searchbar'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import NextLink from 'next/link'
 import axios from 'axios'
-
-import index from '../../public/images/index.jpg'
+import { IoIosSearch } from 'react-icons/io'
+import { baseURL } from '../../constants/baseURL'
 
 const Recipes = () => {
   const router = useRouter()
   const [recipes, setRecipes] = useState([])
   const [thumbnail, setThumbnail] = useState({})
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
@@ -27,27 +26,7 @@ const Recipes = () => {
       }
 
       try {
-        const recipes = await axios.get('http://localhost:4000/recipes', config)
-        // {
-        //   recipes.data.map((item) => {
-        //     const photoURL = item.photo.split(',')[0].substring(12)
-        //     const thumbnail = axios.get(`http://localhost:4000/uploads/${photoURL}`, config)
-        //     // setThumbnail(thumbnail.data)
-        //     console.log(thumbnail)
-        //   })
-        // }
-        const dispatch = () => {
-          const photoData = Promise.resolve(recipes.data.map((item) => {
-            const photoURL = item.photo.split(',')[0].substring(12)
-            return axios.get(`http://localhost:4000/uploads/${photoURL}`, config)
-          }))
-          photoData.then((thumbnail) => {
-            console.log(thumbnail)
-          }).catch((error) => {
-            console.log(error)
-          })
-        }
-        dispatch()
+        const recipes = await axios.get(`${baseURL}/recipes`, config)
         setRecipes(recipes.data)
       } catch (error) {
         router.push('/')
@@ -60,7 +39,18 @@ const Recipes = () => {
   return (
     <Layout title="Recipes">
       <Container>
-        <Searchbar />
+        <Box w="100%" mb={3}>
+          <InputGroup>
+            <InputLeftElement
+              pointerEvents='none'
+              // eslint-disable-next-line react/no-children-prop
+              children={<IoIosSearch />}
+            />
+            <Input placeholder='Search for recipe name'
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </InputGroup>
+        </Box>
         <Flex align="center" justify="space-between" mb={4}>
           <Heading as="h3" fontSize={20} mb={4}>
             Recipes
@@ -72,14 +62,19 @@ const Recipes = () => {
 
         <Section delay={0.1}>
           <SimpleGrid columns={[1, 2, 2]} gap={6}>
-            {recipes.map((item) => (
+            {recipes.filter((val) => {
+              // {console.log(val)}
+              if (searchTerm == "") {
+                return val
+              } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                return val
+              }
+            }).map((item) => (
               <Box key={item._id}>
-                <GridItem
-                  title={item.name}
-                  thumbnail={index}
-                  id={item._id}
-                />
-                <Text>{item.photo.split(',')[0].substring(12)}</Text>
+                <Heading as='h4' size='md'>
+                  <Link href={`/recipes/${item._id}`}>{item.name}</Link>
+                </Heading>
+                {/* <Text>{item.photo.split(',')[0].substring(12)}</Text> */}
               </Box>
             ))}
           </SimpleGrid>

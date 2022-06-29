@@ -8,6 +8,7 @@ import { RecipeTitle } from '../../../components/recipe'
 import axios from 'axios'
 import { MdDelete } from "react-icons/md"
 import Image from 'next/image'
+import { baseURL } from '../../../constants/baseURL'
 
 import index from '../../../public/images/index.jpg'
 
@@ -15,35 +16,33 @@ const Recipe = () => {
     const router = useRouter()
     const [recipe, setRecipe] = useState({})
     const [user, setUser] = useState("")
-    const [photo, setPhoto] = useState("")
+    const [error, setError] = useState("")
     const id = (router.asPath.split('/')[2])
     useEffect(() => {
         if (!localStorage.getItem("authToken")) {
             router.replace('/login')
         }
-        // const getData = async () => {
-        //     const config = {
-        //         headers: {
-        //             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        //         },
-        //     }
+        const getData = async () => {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            }
 
-        //     try {
-        //         const recipe = await axios.get(`http://localhost:4000/recipes/${id}`, config)
-        //         const user = await axios.get('http://localhost:4000', config)
-        //         const photoURL = await recipe.data.photo.split(',')[0].substring(12)
-        //         // const photo = await axios.get(`http://localhost:4000/uploads/${photoURL}`, config)
-        //         // console.log(photo)
-        //         setRecipe(recipe.data)
-        //         console.log((recipe.data.ingredients[0]).split(',')[0])
-        //         setUser(user.data)
-        //         // setPhoto(photo)
-        //     } catch (error) {
-        //         router.push('/')
-        //         console.log(error)
-        //     }
-        // }
-        // getData()
+            try {
+                const recipe = await axios.get(`${baseURL}/recipes/${id}`, config)
+                const user = await axios.get(`${baseURL}`, config)
+                setRecipe(recipe.data)
+                setUser(user.data)
+            } catch (error) {
+                router.push('/')
+                setError(error.response.data.error)
+                setTimeout(() => {
+                    setError("")
+                }, 5000)
+            }
+        }
+        getData()
     }, [id, router])
 
     let condition = recipe.creatorId == user._id
@@ -58,32 +57,10 @@ const Recipe = () => {
         router.replace('/')
     }
 
-    // function count(string) {
-    //     let res = 0;
-
-    //     for (let i = 0; i < string.length; i++) {
-    //         if (string.charAt(i) == ',')
-    //             res++;
-    //     }
-    //     return res + 1;
-    // }
-
-    // let photoNumber = count(recipe.photo)
-
-    // let body = null
-    // function render() {
-    //     for (let i = 0; i <= photoNumber; i++) {
-    //         body = (
-    //             recipe.photo.split(',')[i]
-    //         )
-    //         i++;
-    //     }
-    // }
-    // render()
-
     return (
         <Layout title={recipe.name}>
             <Container>
+            {error && <Text>{error}</Text>}
                 <Flex align="center" justify="space-between">
                     <RecipeTitle>
                         {recipe.name}
@@ -102,9 +79,11 @@ const Recipe = () => {
                         <Box w="100%">
                             <Text fontSize={18}>Ingredients</Text>
                             <UnorderedList>
-                                <ListItem>
-                                    {/* <Text fontSize={15}>{recipe.ingredients[0].split(',')[0]}</Text> */}
-                                </ListItem>
+                                {recipe.ingredients?.map((item) => !item ? null : (
+                                    <ListItem>
+                                        <Text fontSize={15}>{item}</Text>
+                                    </ListItem>
+                                ))}
                             </UnorderedList>
                         </Box>
                     </Section>
@@ -112,24 +91,27 @@ const Recipe = () => {
                         <Box w="100%">
                             <Text fontSize={18}>Procedure</Text>
                             <UnorderedList>
-                                {/* <ListItem>
-                                {recipe.procedure.map((item) => (
+                                {recipe.procedure?.map((item) => !item ? null : (
                                     <ListItem>
                                         <Text fontSize={15}>{item}</Text>
                                     </ListItem>
                                 ))}
-                                </ListItem> */}
                             </UnorderedList>
-                            <Box mt={4}>
-                                <Image
-                                    src={index}
-                                    alt=""
-                                    style={{ borderRadius: "12px" }}
-                                    placeholder="blur"
-                                    loading="lazy"
-                                />
-                                {/* {console.log(index)} */}
-                            </Box>
+                            {recipe.photos?.map((item) => !item ? null : (
+                                <Box mt={4}>
+                                    <Image
+                                        blurDataURL
+                                        unoptimized={() => item}
+                                        src={item}
+                                        alt=""
+                                        width={900}
+                                        height={600}
+                                        style={{ borderRadius: "12px" }}
+                                        placeholder="blur"
+                                        loading="lazy"
+                                    />
+                                </Box>
+                            ))}
                         </Box>
                     </Section>
                 </SimpleGrid>

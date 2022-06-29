@@ -21,6 +21,7 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { baseURL } from '../constants/baseURL'
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
   const active = path === href
@@ -57,7 +58,7 @@ const Navbar = props => {
       }
 
       try {
-        const user = await axios.get('http://localhost:4000', config)
+        const user = await axios.get(`${baseURL}`, config)
         setUser(user.data)
       } catch (error) {
         localStorage.removeItem("authToken")

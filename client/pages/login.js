@@ -5,6 +5,7 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { baseURL } from '../constants/baseURL'
 
 const Login = () => {
     const router = useRouter()
@@ -31,7 +32,7 @@ const Login = () => {
 
         try {
             const { data } = await axios.post(
-                "http://localhost:4000/auth/login",
+                `${baseURL}/auth/login`,
                 {
                     email,
                     password,

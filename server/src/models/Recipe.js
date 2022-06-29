@@ -14,8 +14,8 @@ const RecipeSchema = new mongoose.Schema({
 		type: [String],
 		required: [true, 'A recipe must have a procedure']
 	},
-	photo: {
-		type: String,
+	photos: {
+		type: [String],
 		default: ''
 	},
 	creatorId: {

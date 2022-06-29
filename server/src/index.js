@@ -6,13 +6,13 @@ const recipeRoute = require('./routers/recipe')
 const errorHandler = require('./middleware/error')
 const { checkUser } = require('./middleware/checkUser')
 const cors = require("cors")
+const path = require('path')
+const {PORT } = require('./config/config')
 const corsOptions = {
     origin:'*', 
     credentials:true,
     optionSuccessStatus:200,
 }
-
-const PORT = parseInt(process.env.PORT)
 
 const main = async () => {
     connectDB()
@@ -22,7 +22,7 @@ const main = async () => {
 
     app.get('/', checkUser)
 
-    app.use("/uploads", express.static("src/uploads"))
+    app.use(express.static(path.join(__dirname, "./public")))
     
     app.use('/auth', authRoute)
     app.use('/recipes', recipeRoute)

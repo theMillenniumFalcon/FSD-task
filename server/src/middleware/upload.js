@@ -2,7 +2,7 @@ const multer = require("multer")
 
 const storage = multer.diskStorage({
     destination: (req, files, cb) => {
-        cb(null, "src/uploads")
+        cb(null, `${__dirname}/../public/uploads`)
     },
     filename: (req, file, cb) => {
         let path = `${file.originalname}`.replace(/ /g, "_")
@@ -22,5 +22,7 @@ const upload = multer({
         fileSize: 1024 * 1024 * 2
     }
 })
+
+// const upload = multer({ storage })
 
 module.exports = upload
