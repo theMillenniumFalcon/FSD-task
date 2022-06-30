@@ -6,6 +6,6 @@ const upload = require('../middleware/upload')
 
 router.route('/').get(protect, getAllRecipes)
 router.route('/').post(upload.array('photos'), addRecipe)
-router.route('/:id').get(protect, getRecipe).post(protect, editRecipe).delete(protect, deleteRecipe)
+router.route('/:id').get(protect, getRecipe).patch(protect, editRecipe).delete(protect, deleteRecipe)
 
 module.exports = router

@@ -26,7 +26,7 @@ const addRecipe = async (req, res, next) => {
     let { files } = req
     let resp = []
     _.forEach(files, (file) => {
-        let imagePath = file.path.replace("public", baseURL).replace()
+        let imagePath = file.path.replace("public", baseURL)
         imagePath = imagePath.split('src')[1].substring(1, imagePath.length)
         resp.push(imagePath)
         newRecipe.photos = resp
@@ -40,8 +40,18 @@ const addRecipe = async (req, res, next) => {
     }
 }
 
-const editRecipe = (req, res, next) => {
-    res.status(200).json({ success: true, data: "You got access to the private data in this route! " })
+const editRecipe = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const updates = req.body
+        const options = {new: true}
+
+        const editedRecipe = await Recipe.findByIdAndUpdate(id, updates, options)
+
+        res.status(200).json({ success: true, editedRecipe })
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message })
+    }
 }
 
 const deleteRecipe = async (req, res, next) => {

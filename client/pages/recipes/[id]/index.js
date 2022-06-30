@@ -18,6 +18,7 @@ const Recipe = () => {
     const [user, setUser] = useState("")
     const [error, setError] = useState("")
     const id = (router.asPath.split('/')[2])
+    
     useEffect(() => {
         if (!localStorage.getItem("authToken")) {
             router.replace('/login')

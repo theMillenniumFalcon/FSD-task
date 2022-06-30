@@ -15,7 +15,8 @@ import {
   IconButton,
   useColorModeValue,
   Button,
-  Text
+  Text,
+  Badge
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
@@ -48,6 +49,8 @@ const Navbar = props => {
   const { path } = props
 
   let condition = typeof window !== 'undefined' && localStorage.getItem("authToken")
+
+  let widthCondition = typeof window !== 'undefined' && window.innerWidth > 0
 
   useEffect(() => {
     const getData = async () => {
@@ -109,9 +112,12 @@ const Navbar = props => {
             Home
           </LinkItem>
           {condition ? (
-            <LinkItem href="/recipes" path={path}>
-              Recipes
-            </LinkItem>
+            <>
+              <LinkItem href="/recipes" path={path}>
+                Recipes
+              </LinkItem>
+              <Badge cursor="default">{user.username}</Badge>
+            </>
           ) : null}
         </Stack>
 
@@ -127,8 +133,9 @@ const Navbar = props => {
           ) : null}
           {condition ? (
             <>
-              <Button mr={2} onClick={logoutHandler}>Logout</Button>
-              {/* <Text mr={2}>{user.username}</Text> */}
+              {widthCondition ? (
+                <Button mr={2} onClick={logoutHandler}>Logout</Button>
+              ) : null}
             </>
           ) : null}
           <ThemeToggleButton />

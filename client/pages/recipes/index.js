@@ -61,7 +61,7 @@ const Recipes = () => {
         </Flex>
 
         <Section delay={0.1}>
-          <SimpleGrid columns={[1, 2, 2]} gap={6}>
+          <SimpleGrid columns={[2, 2, 2]} gap={6}>
             {recipes.filter((val) => {
               // {console.log(val)}
               if (searchTerm == "") {

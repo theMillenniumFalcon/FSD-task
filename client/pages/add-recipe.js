@@ -1,33 +1,25 @@
-import { Box, Container, Input, Flex, Button, Text, Textarea, useControllableProp, keyframes } from '@chakra-ui/react'
+import { Box, Container, Input, Flex, Button, Text } from '@chakra-ui/react'
 import Layout from '../components/layouts/article'
 import { RecipeTitle } from '../components/recipe'
 import Section from '../components/section'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import FileBase64 from 'react-file-base64'
 import axios from 'axios'
+import _ from 'lodash'
 import { baseURL } from '../constants/baseURL'
 
 const AddRecipe = () => {
     const router = useRouter()
     const [creatorId, setCreatorId] = useState("")
     const [name, setName] = useState("")
+    const [description, setDescription] = useState("")
     const [ingredients, setIngredients] = useState([""])
     const [procedure, setProcedure] = useState([""])
     const [error, setError] = useState("")
-    const [photos, setPhotos] = useState("")
     const [visibleIngredients, setVisibleIngredients] = useState(true)
     const [visibleProcedure, setVisibleProcedure] = useState(true)
-
-    const addIngredients = () => {
-        setIngredients(ingredients.split(','))
-        setVisibleIngredients(current => !current)
-    }
-
-    const addProcedure = () => {
-        setProcedure(procedure.split(','))
-        setVisibleProcedure(current => !current)
-    }
+    const [isUploading, setUploading] = useState(false)
+    const [uploadedImages, setUploadedImages] = useState([])
 
     useEffect(() => {
         if (!localStorage.getItem("authToken")) {
@@ -43,7 +35,6 @@ const AddRecipe = () => {
             try {
                 const creator = await axios.get(`${baseURL}`, config)
                 setCreatorId(creator.data._id)
-                //   console.log(creatorId)
             } catch (error) {
                 localStorage.removeItem("authToken")
             }
@@ -51,6 +42,34 @@ const AddRecipe = () => {
         }
         getData()
     }, [router])
+
+    const addIngredients = () => {
+        setIngredients(ingredients.split(','))
+        setVisibleIngredients(current => !current)
+    }
+
+    const addProcedure = () => {
+        setProcedure(procedure.split(','))
+        setVisibleProcedure(current => !current)
+    }
+
+    const imageUploadHandler = async (e) => {
+        e.preventDefault()
+        let formData = new FormData()
+        _.forEach(e.target.files, file => {
+            formData.append('files', file)
+            // console.log(file.name)
+            uploadedImages.push(file.name)
+            // console.log(uploadedImages)
+
+        })
+        setUploading(true)
+        // api call
+        // console.group('Uploaded images inside func', uploadedImages)
+        setUploading(false)
+    }
+
+    // console.group('Uploaded images outside func', uploadedImages)
 
     const addRecipeHandler = async (e) => {
         e.preventDefault()
@@ -63,13 +82,14 @@ const AddRecipe = () => {
         }
 
         try {
-            await axios.post(
-                `${baseURL}/recipes`,
-                {
-                    name,
-                    ingredients,
-                    procedure,
-                },
+            console.group('Uploaded images inside another func', uploadedImages)
+            await axios.post(`${baseURL}/recipes`, {
+                name,
+                description,
+                ingredients,
+                procedure,
+                creatorId
+            },
                 config
             )
 
@@ -80,11 +100,6 @@ const AddRecipe = () => {
                 setError("")
             }, 5000)
         }
-    }
-
-    const uploadHandler = (e) => {
-        e.preventDefault()
-        console.log(e.target.file)
     }
 
     return (
@@ -100,6 +115,10 @@ const AddRecipe = () => {
                             <Box>
                                 <Text mb={1}>Name of the recipe</Text>
                                 <Input placeholder="name of the recipe" value={name} onChange={(e) => setName(e.target.value)} />
+                            </Box>
+                            <Box mt={4}>
+                                <Text mb={1}>Description of the recipe</Text>
+                                <Input placeholder="description of the recipe" value={description} onChange={(e) => setDescription(e.target.value)} />
                             </Box>
                             <Box mt={4}>
                                 <Text>Recipe Ingredients</Text>
@@ -139,11 +158,12 @@ const AddRecipe = () => {
                                     ) : null}
                                 </Flex>
                             </Box>
-                            <input value={creatorId} hidden />
                             <Box mt={4}>
-                                <Text mb={1}>Recipe Photos</Text>
-                                <input type="file" name="photo" onChange={uploadHandler} />
+                                <Text>Recipe Photos</Text>
+                                <Text fontSize='xs' mb={1}>(multiple files allowed, hold CTRL to select multiplle files)</Text>
+                                <input type="file" multiple style={{ width: "210px" }} onChange={imageUploadHandler} />
                             </Box>
+                            <input value={creatorId} readOnly hidden />
                             <Flex align="center" justify="space-between" mt={4}>
                                 <Button type='submit'>Add Recipe</Button>
                             </Flex>

@@ -6,6 +6,11 @@ const RecipeSchema = new mongoose.Schema({
 		required: [true, 'A recipe must have a name'],
 		trim: true
 	},
+	description: {
+		type: String,
+		required: [true, 'A recipe must have a description'],
+		trim: true
+	},
 	ingredients: {
 		type: [String],
 		required: [true, 'A recipe must have atleast one ingredient']
